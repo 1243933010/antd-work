@@ -17,4 +17,5 @@ model User{
   name  String?
   access String
   avatar String?
+  password String
 }

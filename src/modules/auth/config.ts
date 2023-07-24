@@ -1,3 +1,3 @@
 export const jwtKey={
-    secret:'nuxt'
+    secret:'antd'
 }

@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,Request } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import {User, Prisma} from '@prisma/client';
-
+import { AuthService } from 'src/modules/auth/auth.service';
+import  {LogoBody,TokenData} from './interface'
 @Injectable()
 export class UserService {
   constructor(private prisma:PrismaService){}
@@ -11,15 +12,31 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  async findAll(username:string):Promise<User|any> {
-    const users = await this.prisma.user.findMany({
+  async login(AuthService:AuthService,body:LogoBody){
+    console.log(body)
+    let auth = await AuthService.validateUser(body.username,body.password);
+    let tokens = await AuthService.certificate({username:auth.name,id:auth.userId})
+    return tokens;
+  }
+
+  async findAll(username:string,password:string):Promise<User|any> {
+    const users = await this.prisma.user.findFirst({
       where:{
-        userId:1
+        name:username,
+        password
       }
     });
-    console.log(users);
-    // return `This action returns all user`;
-    return users
+    return users;
+  }
+
+  async currentUser(req:TokenData){
+    console.log(req.user)
+    const userInfo = await this.prisma.user.findUnique({
+      where:{
+        userId:req.user.id
+      }
+    })
+    return userInfo;
   }
 
   findOne(id: number) {

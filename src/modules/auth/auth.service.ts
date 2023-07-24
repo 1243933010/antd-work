@@ -1,6 +1,7 @@
 import { Injectable,UnauthorizedException } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt'
 import { UserService } from '../../user/user.service';
+import { jwtKey } from './config';
 @Injectable()
 export class AuthService {
     constructor(
@@ -9,7 +10,7 @@ export class AuthService {
     ){ }
     async validateUser(username: string, password: string): Promise<any> {
         console.log('JWT验证 - Step 2: 校验用户信息');
-        const user = await this.userService.findAll(username);
+        const user = await this.userService.findAll(username,password);
         // 注：实际中的密码处理应通过加密措施
         if(!user){
           return {code:400,message:'查无此人'}
@@ -31,13 +32,14 @@ export class AuthService {
     };
     console.log('JWT验证 - Step 3: 处理 jwt 签证',payload);
     try {
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload,{secret:jwtKey.secret});
       return {
         code: user.code,
         token,
         msg: user.message,
       };
     } catch (error) {
+      console.log(error)
       return {
         code: 400,
         msg: `账号或密码错误`,
