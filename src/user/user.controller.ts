@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete ,UseGuards,Request} f
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {TokenDto} from './dto/token.dto'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/modules/auth/auth.service';
+import {CreateInvitationPipe} from '../modules/auth/pipe/pipe.pipe'
 
 @Controller({
   path:'/api',
@@ -37,9 +39,11 @@ export class UserController {
   currentUser(@Request() req) {
     return this.userService.currentUser(req);
   }
+
+
   @UseGuards(AuthGuard('jwt'))
   @Get('/user/chart')
-  findOne(@Param() Param: object) {
+  findOne(@Param(CreateInvitationPipe) TokenDto: TokenDto) {
     // return this.userService.findOne(+id);
     return {data:[ {year: '1991', value: 3 },
     { year: '1992', value: 4 },
