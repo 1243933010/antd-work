@@ -28,12 +28,6 @@ export class UserController {
   }
   
   
-  @Get('/login/account/token')
-  findAll() {
-    // return this.userService.findAll();
-    return {code:200,message:'122'}
-  }
-  
   @UseGuards(AuthGuard('jwt'))
   @Get('/currentUser')
   currentUser(@Request() req) {
@@ -43,7 +37,8 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/user/chart')
-  findOne(@Param(CreateInvitationPipe) TokenDto: TokenDto) {
+  // CreateInvitationPipe
+  findOne(@Param() TokenDto: TokenDto) {
     // return this.userService.findOne(+id);
     return {data:[ {year: '1991', value: 3 },
     { year: '1992', value: 4 },
@@ -56,11 +51,22 @@ export class UserController {
     { year: '1999', value: 13 }]}
   }
 
+
+
   @UseGuards(AuthGuard('jwt'))
   @Post('/login/outLogin')
   outLogin(@Param() Param: object) {
     return {};
   }
+
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/currentUser')
+  getUserLabel(@Request() req) {
+    return this.userService.currentUser(req);
+  }
+
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

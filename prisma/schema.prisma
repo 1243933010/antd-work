@@ -18,4 +18,27 @@ model User{
   access String
   avatar String?
   password String
+  labels UserLabel[]
+}
+
+model UserLabel{
+  id Int @default(autoincrement()) @id
+  name String
+  user User @relation(fields: [userId],references: [userId])
+  userId Int
+}
+
+model Work{
+   id Int @default(autoincrement()) @id
+   userId Int
+   workType Int
+   time String?
+   mounthTime String?
+   tag Json?
+}
+
+model WorkTag{
+   value Int @default(autoincrement()) @id
+   tag String
+   color String
 }

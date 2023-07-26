@@ -35,7 +35,8 @@ export class UserService {
     const userInfo = await this.prisma.user.findUnique({
       where:{
         userId:req.user.id
-      }
+      },
+      include:{labels: true}
     })
     return userInfo;
   }
