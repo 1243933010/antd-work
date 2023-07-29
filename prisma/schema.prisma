@@ -18,27 +18,38 @@ model User{
   access String
   avatar String?
   password String
-  labels UserLabel[]
+  // labels UserLabel[]
+  labels Json?
+
 }
 
-model UserLabel{
-  id Int @default(autoincrement()) @id
-  name String
-  user User @relation(fields: [userId],references: [userId])
-  userId Int
-}
+// model UserLabel{
+//   id Int @default(autoincrement()) @id
+//   name String
+//   user User @relation(fields: [userId],references: [userId])
+//   userId Int
+// }
 
 model Work{
    id Int @default(autoincrement()) @id
    userId Int
    workType Int
-   time String?
+   startTime String?
+   endTime String?
    mounthTime String?
    tag Json?
+   workList WorkList[]
 }
 
 model WorkTag{
    value Int @default(autoincrement()) @id
    tag String
    color String
+}
+
+model WorkList{
+  id Int @default(autoincrement()) @id
+  value String
+  work Work @relation(fields: [workId], references: [id])
+  workId Int
 }

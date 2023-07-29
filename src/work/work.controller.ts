@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,Query ,Request} from '@nestjs/common';
 import { WorkService } from './work.service';
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
+import {CreateInvitationPipe} from '../modules/auth/pipe/pipe.pipe'
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller({
   path:'/api',
@@ -10,14 +12,20 @@ import { UpdateWorkDto } from './dto/update-work.dto';
 export class WorkController {
   constructor(private readonly workService: WorkService) {}
 
-  @Post()
-  create(@Body() createWorkDto: CreateWorkDto) {
-    return this.workService.create(createWorkDto);
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/work')
+   create(@Body(CreateInvitationPipe) createWorkDto: CreateWorkDto,@Request() req) {
+    return this.workService.create(createWorkDto,req.user);
   }
 
-  @Get('/label')
-  findAll() {
-    return this.workService.labelList();
+  @Get('/work')
+  getWork(@Query() query: object) {
+    return this.workService.getWork(query);
+  }
+
+  @Get('/work/tag')
+  findWorkTag() {
+    return this.workService.findWorkTag();
   }
 
   @Get(':id')

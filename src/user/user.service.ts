@@ -36,7 +36,7 @@ export class UserService {
       where:{
         userId:req.user.id
       },
-      include:{labels: true}
+      // include:{labels: true}
     })
     return userInfo;
   }
