@@ -12,6 +12,6 @@ export class CreateUserDto {
 
     phone:string
 
-    userId:string
+    id:string
 
 }

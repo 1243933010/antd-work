@@ -38,7 +38,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('/user/chart')
   // CreateInvitationPipe
-  findOne(@Param(CreateInvitationPipe) TokenDto: TokenDto) {
+  findOne(@Param() TokenDto: TokenDto) {
     // return this.userService.findOne(+id);
     return {data:[ {year: '1991', value: 3 },
     { year: '1992', value: 4 },

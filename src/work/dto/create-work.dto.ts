@@ -17,7 +17,7 @@ export class CreateWorkDto {
    
     @IsArray({message:'tag必须格式是数组'})
     @IsOptional()
-    tag:string
+    tag:{key:number}[]
 
    
     @IsArray({message:'workList必须格式是数组'})

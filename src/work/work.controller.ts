@@ -18,9 +18,10 @@ export class WorkController {
     return this.workService.create(createWorkDto,req.user);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('/work')
-  getWork(@Query() query: object) {
-    return this.workService.getWork(query);
+  getWork(@Query() query: object,@Request() req) {
+    return this.workService.getWork(query,req.user);
   }
 
   @Get('/work/tag')

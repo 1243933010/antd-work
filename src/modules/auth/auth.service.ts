@@ -12,7 +12,7 @@ export class AuthService {
         console.log('JWT验证 - Step 2: 校验用户信息');
         const user = await this.userService.findAll(username,password);
         // 注：实际中的密码处理应通过加密措施
-        if(!user){
+        if(user===null){
           return {code:400,message:'查无此人'}
         }
         if (user && user.password === password) {

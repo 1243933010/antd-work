@@ -1,11 +1,11 @@
 import { Injectable,Request } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
 import { PrismaService } from '../prisma/prisma.service';
-import {User, Prisma} from '@prisma/client';
+// import { Prisma} from '@prisma/client';
 import { AuthService } from 'src/modules/auth/auth.service';
 import  {LogoBody,TokenData} from './interface'
+import {excludeField} from 'src/common/excludeField'
 @Injectable()
 export class UserService {
   constructor(private prisma:PrismaService){}
@@ -14,31 +14,42 @@ export class UserService {
   }
 
   async login(AuthService:AuthService,body:LogoBody){
-    console.log(body)
     let auth = await AuthService.validateUser(body.username,body.password);
-    let tokens = await AuthService.certificate({username:auth.name,id:auth.userId})
+    if(auth.code!==0){
+      return auth
+    }
+   
+    let tokens = await AuthService.certificate({username:auth.name,id:auth.id})
+    
     return tokens;
   }
 
-  async findAll(username:string,password:string):Promise<User|any> {
-    const users = await this.prisma.user.findFirst({
-      where:{
-        name:username,
-        password
+  async findAll(username:string,password:string):Promise<any> {
+   
+    const users = await this.prisma.user.findFirst(
+      {
+        where:{
+          name:username,
+          password
+        }
       }
-    });
+    );
     return users;
   }
 
   async currentUser(req:TokenData){
-    console.log(req.user)
-    const userInfo = await this.prisma.user.findUnique({
+    const userInfo = await this.prisma.user.findFirst({
       where:{
-        userId:req.user.id
+        id:req.user.id,
+        isShow:true,
       },
-      // include:{labels: true}
     })
-    return userInfo;
+    if(userInfo!==null){
+      let user = excludeField(userInfo,['password','isShow'])
+      return user;
+    }
+
+    
   }
 
   findOne(id: number) {

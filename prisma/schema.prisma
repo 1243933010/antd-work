@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,48 +5,74 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-
-model User{
-  userId    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  access String
-  avatar String?
+model User {
+  id  Int     @id @default(autoincrement())
+  email    String?
+  name     String?
+  access   String
+  avatar   String?
   password String
-  // labels UserLabel[]
-  labels Json?
-
+  isShow   Boolean @default(true)
 }
 
-// model UserLabel{
-//   id Int @default(autoincrement()) @id
-//   name String
-//   user User @relation(fields: [userId],references: [userId])
-//   userId Int
-// }
 
-model Work{
-   id Int @default(autoincrement()) @id
-   userId Int
-   workType Int
-   startTime String?
-   endTime String?
-   mounthTime String?
-   tag Json?
-   workList WorkList[]
+
+model Work {
+  id          Int   @unique  @id @default(autoincrement())
+  userId     Int
+  workType   Int
+  startTime  String?
+  endTime    String?
+  mounthTime String?
+  workList    WorkList[]  
+  workTags   WorkToWorkTag[]
+  isShow   Boolean @default(true)
 }
 
-model WorkTag{
-   value Int @default(autoincrement()) @id
-   tag String
-   color String
-}
 
-model WorkList{
-  id Int @default(autoincrement()) @id
-  value String
-  work Work @relation(fields: [workId], references: [id])
+
+model WorkList {
+  id      Int    @id @default(autoincrement())
+  value   String
   workId Int
+  work      Work    @relation( fields: [workId], references: [id])
+  @@index([workId])
+}
+
+model WorkTag {
+  value Int    @id @default(autoincrement())
+  tag   String
+  color String
+  works  WorkToWorkTag[] 
+}
+
+model WorkToWorkTag {
+  work     Work     @relation(fields: [workId], references: [id])
+  workId    Int
+  workTag   WorkTag     @relation(fields: [workTagId], references: [value])
+  workTagId Int
+
+  @@id([workId, workTagId])
+  @@index([workTagId])
+  @@index([workId])
+}
+
+
+model MaterialLibraryClassification{
+   id      Int    @id @default(autoincrement())
+   label String
+   materialLibrary MaterialLibrary[]
+}
+
+model MaterialLibrary{
+   id      Int    @id @default(autoincrement())
+   label String
+   url String
+   classificationId Int
+   materialLibraryClassification MaterialLibraryClassification @relation(fields: [classificationId],references: [id])
+
+   @@index([classificationId])
 }
