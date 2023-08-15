@@ -18,7 +18,7 @@ export class Respon<T> implements NestInterceptor{
                 Reflect.deleteProperty(result,'code')
                 this.logger.info('response',result)
                 return {
-                    data:result.data?result.data:result,
+                    data:result.length?result:result,
                     code:data?.code?data.code:0,
                     message:data?.message?data.message:'success'
                 }

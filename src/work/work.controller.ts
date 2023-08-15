@@ -29,17 +29,20 @@ export class WorkController {
     return this.workService.findWorkTag();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/work/:id')
+  findOne(@Param('id') id: string,@Request() req) {
+    return this.workService.findOne(+id,req.user);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkDto: UpdateWorkDto) {
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('/work/:id')
+  update(@Param('id') id: string, @Body(CreateInvitationPipe) updateWorkDto: UpdateWorkDto,@Request() req) {
     return this.workService.update(+id, updateWorkDto);
   }
 
-  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/work/:id')
   remove(@Param('id') id: string) {
     return this.workService.remove(+id);
   }

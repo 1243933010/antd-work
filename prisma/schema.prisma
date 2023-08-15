@@ -39,6 +39,7 @@ model WorkList {
   value   String
   workId Int
   work      Work    @relation( fields: [workId], references: [id])
+  isShow   Boolean @default(true)
   @@index([workId])
 }
 
