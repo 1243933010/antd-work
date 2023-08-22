@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
   relationMode = "prisma"
 }
-
+//用户表
 model User {
   id  Int     @id @default(autoincrement())
   email    String?
@@ -19,7 +19,7 @@ model User {
 }
 
 
-
+//work表
 model Work {
   id          Int   @unique  @id @default(autoincrement())
   userId     Int
@@ -33,7 +33,7 @@ model Work {
 }
 
 
-
+//work关联的worklist表
 model WorkList {
   id      Int    @id @default(autoincrement())
   value   String
@@ -43,6 +43,7 @@ model WorkList {
   @@index([workId])
 }
 
+//work关联的worktag表
 model WorkTag {
   value Int    @id @default(autoincrement())
   tag   String
@@ -50,6 +51,7 @@ model WorkTag {
   works  WorkToWorkTag[] 
 }
 
+//work跟worktag的多对多中间表
 model WorkToWorkTag {
   work     Work     @relation(fields: [workId], references: [id])
   workId    Int
@@ -61,13 +63,14 @@ model WorkToWorkTag {
   @@index([workId])
 }
 
-
+//图片素材表
 model MaterialLibraryClassification{
    id      Int    @id @default(autoincrement())
    label String
    materialLibrary MaterialLibrary[]
 }
 
+//图片素材分类表
 model MaterialLibrary{
    id      Int    @id @default(autoincrement())
    label String
@@ -76,4 +79,27 @@ model MaterialLibrary{
    materialLibraryClassification MaterialLibraryClassification @relation(fields: [classificationId],references: [id])
 
    @@index([classificationId])
+}
+
+
+//ecahrt 数据表
+
+model EchartTable{
+  id      Int    @id @default(autoincrement())
+  userId Int
+  type Int  
+  time String
+  masterNum String?
+  devNum String?
+  isShow Boolean @default(true)
+  dictionary EchartDictionary[]
+}
+
+model EchartDictionary{
+  id Int    @id @default(autoincrement())
+  typeId Int
+  masterName String
+  devName String?
+  echart  EchartTable  @relation( fields: [typeId], references: [id])
+  @@index([id])
 }

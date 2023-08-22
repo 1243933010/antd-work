@@ -8,7 +8,6 @@ export class WorkService {
     private prisma: PrismaService
   ) { }
   async create(createWorkDto: CreateWorkDto, user: { id: number }) {
-    // console.log(user,'=======')
     try {
       let { workList, tag, ...obj } = createWorkDto;
       obj.workType = +obj.workType;
@@ -18,26 +17,25 @@ export class WorkService {
         });
 
         if (workList.length) {
-          const createdWorkListItems = await prisma.workList.createMany({
+          await prisma.workList.createMany({
             data: workList.map((item) => ({ ...item, workId: result?.id })),
           });
         }
 
         let tagList = [];
-        if (tag.length > 0) {
+        if (tag?.length > 0) {
           for (const tagData of tag) {
             let obj = { workId: result.id, workTagId: +tagData.key, }
             tagList.push(obj);
           }
-          let status = await prisma.workToWorkTag.createMany({ data: tagList });
-          console.log(status)
+           await prisma.workToWorkTag.createMany({ data: tagList });
         }
         return { code: 0, message: '创建成功' }
       });
       return transactionResult; // 返回事务结果
     } catch (error) {
       console.log(error)
-      return { code: 400, message: error };
+      return { code: 400, message: error.name };
     }
   }
   async getWork(query, user) {
@@ -71,7 +69,11 @@ export class WorkService {
       skip,
       take: +pageSize,
       include: {
-        workList: true, // 加载 work_list 关联模型的信息
+        workList: {
+          where:{
+            isShow:true
+          }
+        }, // 加载 work_list 关联模型的信息
         // workTags:true
         workTags: {
           include: {
@@ -96,7 +98,11 @@ export class WorkService {
         id
       },
       include: {
-        workList: true,
+        workList: {
+          where:{
+            isShow:true
+          }
+        },
         workTags: {
           include: {
             workTag: true
@@ -104,7 +110,7 @@ export class WorkService {
         }
       }
     })
-    console.log(data)
+    // console.log(data)
     if (data.workTags.length) {
       let arr = [];
       data.workTags.forEach(val => arr.push(val.workTag))
@@ -118,14 +124,27 @@ export class WorkService {
     try {
       const transactionResult = await this.prisma.$transaction(async (prisma) => {
         if (workList.length) {
-          // console.log(workList)
-          for (const val of workList) {
-            let status = await this.prisma.workList.upsert({
-              where: { id: val.id },
-              update: val,
-              create:{value:val.value,workId:id}
-            });
-           console.log(status)
+          const workIdToRemove = workList.map((data) => data.id);  //拿到前端传来的worklist数组内的id
+          await prisma.workList.deleteMany({     //删除workid一直的数据不在前端传来的id数组内的数据
+            where: {workId:id,
+              id: {
+                notIn:workIdToRemove
+              },
+            },
+          });
+          for (const val of workList) {  //循环根据有无id决定是更新还是添加
+            if (val.id) {
+              // 存在 id，则执行更新操作
+              await prisma.workList.update({
+                where: { id: val.id },
+                data: {...val,isShow:true},
+              });
+            } else {
+              // 不存在 id，则执行创建操作
+              await prisma.workList.create({
+                data: { value: val.value, workId: id },
+              });
+            }
           }
           
         }
@@ -135,10 +154,10 @@ export class WorkService {
             let obj = { workId: id, workTagId: +tagData.key, }
             tagList.push(obj);
           }
-          let sta = await this.prisma.workToWorkTag.deleteMany({
+          await this.prisma.workToWorkTag.deleteMany({
             where: { workId: id }
           })
-          let status = await prisma.workToWorkTag.createMany({ data: tagList });
+          await prisma.workToWorkTag.createMany({ data: tagList });
         }
         await this.prisma.work.update({
           where: { id },
@@ -167,6 +186,7 @@ export class WorkService {
     }
     return { code: 400, message: '删除失败' }
   }
+
   findWorkTag() {
     return this.prisma.workTag.findMany();
   }
