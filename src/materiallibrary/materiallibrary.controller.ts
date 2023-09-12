@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,UseInterceptors,UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,UseInterceptors,UploadedFile,Query  } from '@nestjs/common';
 import { MateriallibraryService } from './materiallibrary.service';
 import { CreateMateriallibraryDto } from './dto/create-materiallibrary.dto';
 import { UpdateMateriallibraryDto } from './dto/update-materiallibrary.dto';
@@ -10,17 +10,20 @@ import { AuthGuard } from '@nestjs/passport';
   path:'/api'
 })
 export class MateriallibraryController {
-  constructor(private readonly materiallibraryService: MateriallibraryService) {}
+  constructor(
+    private readonly materiallibraryService: MateriallibraryService
+    ) {}
 
-  
-  @Post()
-  create(@Body() createMateriallibraryDto: CreateMateriallibraryDto) {
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/materiallibrary')
+  create(@Body(CreateInvitationPipe) createMateriallibraryDto: CreateMateriallibraryDto) {
     return this.materiallibraryService.create(createMateriallibraryDto);
   }
 
-  @Get()
-  findAll() {
-    return this.materiallibraryService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  @Get('materiallibrary')
+  findAll(@Query() query) {
+    return this.materiallibraryService.findAll(query);
   }
 
   @Get(':id')
@@ -33,7 +36,8 @@ export class MateriallibraryController {
     return this.materiallibraryService.update(+id, updateMateriallibraryDto);
   }
 
-  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/materiallibrary/:id')
   remove(@Param('id') id: string) {
     return this.materiallibraryService.remove(+id);
   }
@@ -50,10 +54,30 @@ export class MateriallibraryController {
     return this.materiallibraryService.createLabel(body);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
   upload( @UploadedFile() file) {
+    console.log(file)
     return this.materiallibraryService.upload(file);
+  }
+
+  @Post('/uploadFile')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile( @UploadedFile() file) {
+    return this.materiallibraryService.getXlsxData(file);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/updateXlsx')
+  updateXlsx( @Body() body) {
+    return this.materiallibraryService.getXlsxData(body);
+  }
+
+
+
+  @Get('/test/test')
+  test() {
+    return this.materiallibraryService.test();
   }
 }

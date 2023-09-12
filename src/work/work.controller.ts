@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,Query ,Request} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,Query ,Request,UseInterceptors,UploadedFile} from '@nestjs/common';
 import { WorkService } from './work.service';
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
 import {CreateInvitationPipe} from '../modules/auth/pipe/pipe.pipe'
 import { AuthGuard } from '@nestjs/passport';
-
+import {FileInterceptor} from '@nestjs/platform-express'
 @Controller({
   path:'/api',
 })
@@ -46,4 +46,11 @@ export class WorkController {
   remove(@Param('id') id: string) {
     return this.workService.remove(+id);
   }
+
+  
+  // @Post('/uploadFile')
+  // @UseInterceptors(FileInterceptor('file'))
+  // uploadFile( @UploadedFile() file) {
+  //   return this.workService.getXlsxData(file);
+  // }
 }

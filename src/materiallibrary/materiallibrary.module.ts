@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module} from '@nestjs/common';
 import { MateriallibraryService } from './materiallibrary.service';
 import { MateriallibraryController } from './materiallibrary.controller';
 import { MulterModule } from '@nestjs/platform-express';

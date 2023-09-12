@@ -63,17 +63,18 @@ model WorkToWorkTag {
   @@index([workId])
 }
 
-//图片素材表
+//图片素材分类表
 model MaterialLibraryClassification{
    id      Int    @id @default(autoincrement())
    label String
    materialLibrary MaterialLibrary[]
 }
 
-//图片素材分类表
+//图片素材表
 model MaterialLibrary{
    id      Int    @id @default(autoincrement())
-   label String
+  //  label String
+   isShow  Boolean @default(true)
    url String
    classificationId Int
    materialLibraryClassification MaterialLibraryClassification @relation(fields: [classificationId],references: [id])

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
 import { PrismaService } from '../prisma/prisma.service';
+const XlsxPopulate = require('xlsx-populate');
 @Injectable()
 export class WorkService {
   constructor(
@@ -189,5 +190,47 @@ export class WorkService {
 
   findWorkTag() {
     return this.prisma.workTag.findMany();
+  }
+
+  async getXlsxData(file){
+   let workbook = await  XlsxPopulate.fromDataAsync(file.buffer);
+   const sheet = workbook.sheet(0); // 获取第一个工作表
+   
+    // 获取数据范围的值
+    const usedRangeValues = sheet.usedRange().value();
+
+    let sliceIndex = 0;
+    let length = usedRangeValues[0].filter((val)=>val).length;
+    if(length<5){
+      sliceIndex = 1;
+    }
+    // 获取数据行的数据
+    const dataRows = usedRangeValues.slice(sliceIndex); // 跳过标题行
+    const data = [];
+
+    let columKey = [];
+    dataRows[0].forEach(val=>{
+      columKey.push(val);
+    })
+    
+    // 遍历每一行的数据，创建对象并添加到数据数组中
+    for(let i =1;i<dataRows.length;i++){
+      const obj = {};
+      for(let j = 0;j<dataRows[i].length;j++){
+        // const fieldName = 'Column ' + (j + 1);
+        if(dataRows[i][0]){
+          obj[columKey[j]] = dataRows[i][j];
+        }else{
+          break
+        }
+        
+      }
+      if(Object.keys(obj).length>0){
+        data.push(obj);
+      }
+    }
+    console.log(data)
+    return {data};
+    
   }
 }
