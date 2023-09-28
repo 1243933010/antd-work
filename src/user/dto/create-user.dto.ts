@@ -1,17 +1,14 @@
 export class CreateUserDto {
-
+    id?:string
+    
     access:string
 
-    address:string
-
-    avatar:string
-
-    tags:object 
+    avatar?:string
 
     name:string
 
-    phone:string
+    email?:string
 
-    id:string
+    
 
 }

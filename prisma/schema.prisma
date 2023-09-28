@@ -15,7 +15,7 @@ model User {
   access   String
   avatar   String?
   password String
-  isShow   Boolean @default(true)
+  isShow   Int @default(1)
 }
 
 

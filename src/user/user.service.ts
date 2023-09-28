@@ -41,7 +41,7 @@ export class UserService {
     const userInfo = await this.prisma.user.findFirst({
       where:{
         id:req.user.id,
-        isShow:true,
+        isShow:1,
       },
     })
     if(userInfo!==null){
@@ -52,6 +52,52 @@ export class UserService {
     
   }
 
+  getUserList(req,query){
+    console.log(query)
+    let { pageSize, current,isShow,name,email, ...obj } = query;
+    let skip = pageSize * (current - 1);
+    let whereObj = {
+      ...obj,
+      name:{
+        contains:name
+      },
+      email:{
+        contains:email
+      }
+    }
+    if(isShow){
+      whereObj.isShow  = +isShow;
+    }
+    return this.prisma.user.findMany({
+      skip,
+      where:whereObj
+    })
+    return[]
+  }
+
+  async createUser(createUserDto){
+    console.log(createUserDto)
+    let result = await this.prisma.user.create({data:createUserDto})
+    if(result){
+      return {message:'创建成功'}
+    }
+    
+
+  }
+
+  async updateUser(createUserDto){
+    let result = await this.prisma.user.update({
+      where:{
+        id:createUserDto.id,
+        
+      },
+      data:createUserDto
+    })
+    if(result){
+      return {message:'更新成功'}
+    }
+    return {code:400,message:'更新失败'}
+  }
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }

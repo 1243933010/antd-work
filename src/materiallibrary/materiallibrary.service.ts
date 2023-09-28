@@ -27,24 +27,31 @@ export class MateriallibraryService {
   async findAll(query) {
     console.log(query)
     let { pageSize, current, materialLibrary } = query;
-    let skip = pageSize * (current - 1);
+    let skip = 0;
+    if(pageSize&&current){
+       skip = pageSize * (current - 1);
+    }
     let whereObj = { classificationId: undefined };
     if (materialLibrary) {
       whereObj.classificationId = +materialLibrary;
     }
-    let result = await this.prisma.materialLibrary.findMany({
+    let manyObj:any= {
       where: whereObj,
-      skip,
-      take: +pageSize,
       select: {
         id: true,
         url: true,
         classificationId: true
       }
-    })
-    result.forEach(val => {
-      val.url = process.env.UPLOAD_URL + val.url;
-    })
+    }
+    console.log(skip,pageSize,current)
+    if(pageSize>0){
+      manyObj.skip = skip;
+      manyObj.take=+pageSize;
+    }
+    let result = await this.prisma.materialLibrary.findMany(manyObj)
+    // result.forEach(val => {
+    //   val.url = process.env.UPLOAD_URL + val.url;
+    // })
     let total = await this.prisma.materialLibrary.count({
       where: whereObj,
     })

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete ,UseGuards,Request} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete ,UseGuards,Request,Query,Put} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -66,6 +66,25 @@ export class UserController {
     return this.userService.currentUser(req);
   }
 
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user')
+  getUserList(@Request() req,@Query() query) {
+    return this.userService.getUserList(req,query);
+  }
+
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/user')
+  createUser(@Body(CreateInvitationPipe) createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/user')
+  updateUser(@Body(CreateInvitationPipe) createUserDto: CreateUserDto) {
+    return this.userService.updateUser(createUserDto);
+  }
 
 
   @Patch(':id')
