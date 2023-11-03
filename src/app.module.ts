@@ -7,6 +7,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { WorkModule } from './work/work.module';
 import { EchartModule } from './echart/echart.module';
 import { MateriallibraryModule } from './materiallibrary/materiallibrary.module';
+import { CommonModuleModule } from './modules/common-module/common-module.module';
+
 import { ConfigModule,ConfigService } from '@nestjs/config'
 
 let envFilePath = ['.env'];
@@ -21,7 +23,7 @@ if(process.env.NODE_ENV=='dev'){
     ConfigModule.forRoot({
       envFilePath
     }),
-    UserModule,PrismaModule,AuthModule, WorkModule, EchartModule, MateriallibraryModule],
+    UserModule,PrismaModule,AuthModule, WorkModule, EchartModule, MateriallibraryModule,CommonModuleModule],
   controllers: [AppController],
   providers: [AppService],
 })

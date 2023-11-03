@@ -5,6 +5,8 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  
+
   relationMode = "prisma"
 }
 //用户表
@@ -103,4 +105,11 @@ model EchartDictionary{
   devName String?
   echart  EchartTable  @relation( fields: [typeId], references: [id])
   @@index([id])
+}
+
+
+model PackageTable{
+ id Int    @id @default(autoincrement())
+ shopToken String @default("")
+ @@index([id])
 }
