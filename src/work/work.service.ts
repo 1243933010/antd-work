@@ -40,7 +40,7 @@ export class WorkService {
     }
   }
   async getWork(query, user) {
-    let { pageSize, current, workType, startTime, endTime, tag = undefined, ...obj } = query;
+    let { pageSize, current, workType, startTime, endTime, tag = undefined,total:string,...obj } = query;
     let skip = pageSize * (current - 1);
     const whereObject = {
       workType: workType ? +workType : undefined,

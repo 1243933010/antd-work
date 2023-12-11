@@ -110,6 +110,6 @@ model EchartDictionary{
 
 model PackageTable{
  id Int    @id @default(autoincrement())
- shopToken String @default("")
+ shopToken String @db.VarChar(1000) @default("")
  @@index([id])
 }

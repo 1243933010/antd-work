@@ -38,8 +38,8 @@ export class CommonModuleController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/packageJson')
-  package(@Request() req) {
-    return this.commonModuleService.package(req);
+  package(@Body() body) {
+    return this.commonModuleService.package(body);
   }
 
   @Get('/packageJson')

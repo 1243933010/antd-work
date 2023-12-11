@@ -25,12 +25,22 @@ export class CommonModuleService {
     return `This action removes a #${id} commonModule`;
   }
 
-  async package(req){
-    // console.log('---')
-    let data = await this.prisma.packageTable.findFirst();
-    console.log(data,'===')
-    return {code:0,data:{}}
-
+  async package(body){
+    console.log(body,'---')
+    try {
+      let data = await this.prisma.packageTable.update({
+        where:{id:1},
+        data:{
+          shopToken:body.token
+        }
+      })
+      if(data){
+        return {code:0,message:'更新成功'}
+      }
+      
+    } catch (error) {
+      return {code:400,message:error.name}
+    }
   }
 
   async getPackage(){
@@ -45,6 +55,6 @@ export class CommonModuleService {
   }
 
   async getNotice(req){
-    return {code:0,data:{}}
+    return {code:0,data:[]}
   }
 }
