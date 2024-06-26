@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /src/images
+/prisma/migrations
 # Logs
 logs
 *.log

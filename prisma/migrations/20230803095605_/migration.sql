@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `user` ADD COLUMN `isShow` BOOLEAN NOT NULL DEFAULT true;
-
--- AlterTable
-ALTER TABLE `work` ADD COLUMN `isShow` BOOLEAN NOT NULL DEFAULT true;
