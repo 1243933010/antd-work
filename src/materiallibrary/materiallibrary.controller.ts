@@ -58,7 +58,7 @@ export class MateriallibraryController {
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
   upload( @UploadedFile() file) {
-    console.log(file)
+    console.log(file,'---')
     return this.materiallibraryService.upload(file);
   }
 
