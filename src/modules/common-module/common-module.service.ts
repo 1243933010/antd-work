@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommonModuleDto } from './dto/create-common-module.dto';
 import { UpdateCommonModuleDto } from './dto/update-common-module.dto';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../prismaInt/prismaInt.service';
 @Injectable()
 export class CommonModuleService {
   constructor(private prisma:PrismaService){}

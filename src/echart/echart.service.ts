@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEchartDto } from './dto/create-echart.dto';
 import { UpdateEchartDto } from './dto/update-echart.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prismaInt/prismaInt.service';
 
 @Injectable()
 export class EchartService {

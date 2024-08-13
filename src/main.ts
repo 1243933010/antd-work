@@ -34,6 +34,6 @@ async function bootstrap() {
   app.use( new CorsMiddleware().use);//处理跨域问题
   app.enableCors();//处理跨域问题
 
-  await app.listen(3000);
+  await app.listen(3006);
 }
 bootstrap();

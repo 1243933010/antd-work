@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { PrismaInitModule } from './prismaInt/prismaInt.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { WorkModule } from './work/work.module';
 import { EchartModule } from './echart/echart.module';
@@ -23,7 +23,7 @@ if(process.env.NODE_ENV=='dev'){
     ConfigModule.forRoot({
       envFilePath
     }),
-    UserModule,PrismaModule,AuthModule, WorkModule, EchartModule, MateriallibraryModule,CommonModuleModule],
+    UserModule,PrismaInitModule,AuthModule, WorkModule, EchartModule, MateriallibraryModule,CommonModuleModule],
   controllers: [AppController],
   providers: [AppService],
 })

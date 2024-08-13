@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prismaInt/prismaInt.service';
 const XlsxPopulate = require('xlsx-populate');
 @Injectable()
 export class WorkService {

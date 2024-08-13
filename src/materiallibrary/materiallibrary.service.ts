@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMateriallibraryDto } from './dto/create-materiallibrary.dto';
 import { UpdateMateriallibraryDto } from './dto/update-materiallibrary.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prismaInt/prismaInt.service';
 import { extname, join } from 'path'
 import axios from 'axios';
 
