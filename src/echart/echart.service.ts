@@ -84,6 +84,6 @@ export class EchartService {
     }else{
       data= await this.primsa.echartDictionary.findMany()
     }
-    return data
+    return data||[]
   }
 }
