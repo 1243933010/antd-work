@@ -62,6 +62,7 @@ export class WorkService {
         };
       })
     }
+    // console.log(JSON.stringify(whereObject),'---')
     let total = await this.prisma.work.count({
       where: whereObject,
     })
