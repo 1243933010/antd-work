@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMateriallibraryDto } from './dto/create-materiallibrary.dto';
 import { UpdateMateriallibraryDto } from './dto/update-materiallibrary.dto';
 import { PrismaService } from '../prismaInt/prismaInt.service';
+import { unlinkSync, existsSync } from 'fs';
 import { extname, join } from 'path'
 import axios from 'axios';
 
@@ -25,17 +26,17 @@ export class MateriallibraryService {
 
 
   async findAll(query) {
-    console.log(query)
+    // console.log(query)
     let { pageSize, current, materialLibrary } = query;
     let skip = 0;
-    if(pageSize&&current){
-       skip = pageSize * (current - 1);
+    if (pageSize && current) {
+      skip = pageSize * (current - 1);
     }
     let whereObj = { classificationId: undefined };
     if (materialLibrary) {
       whereObj.classificationId = +materialLibrary;
     }
-    let manyObj:any= {
+    let manyObj: any = {
       where: whereObj,
       select: {
         id: true,
@@ -43,10 +44,10 @@ export class MateriallibraryService {
         classificationId: true
       }
     }
-    console.log(skip,pageSize,current)
-    if(pageSize>0){
+    // console.log(skip,pageSize,current)
+    if (pageSize > 0) {
       manyObj.skip = skip;
-      manyObj.take=+pageSize;
+      manyObj.take = +pageSize;
     }
     let result = await this.prisma.materialLibrary.findMany(manyObj)
     // result.forEach(val => {
@@ -66,7 +67,39 @@ export class MateriallibraryService {
     return `This action updates a #${id} materiallibrary`;
   }
 
-  async remove(id: number) {
+  async remove(id: number) {   //删除数据库的图片数据，同时删除本地图片路径
+    let fileData = await this.prisma.materialLibrary.findUnique({ where: { id } })
+    // console.log(fileData,process.env)
+    if (fileData) {
+      // console.log(fileData.url.split('/')[fileData.url.split('/').length-1])
+      // join(__dirname,'./../src/images')
+      const filePath = join(__dirname, process.env.UPLOAD_URL_LINE, fileData.url.split('/')[fileData.url.split('/').length - 1]);
+      // console.log(filePath, __dirname)
+      if (existsSync(filePath)) {
+        try {
+          unlinkSync(filePath);  // 同步删除文件
+          // console.log(`File ${fileData.url} deleted successfully`);
+        } catch (err) {
+          // console.error(`Error deleting file ${fileData.url}:`, err);
+          // throw new Error(`Could not delete file ${fileData.url}`);
+          return {code: 400, message: '删除失败'}
+        }
+      } 
+      let result = await this.prisma.materialLibrary.delete({
+        where: {
+          id
+        }
+      })
+      if (result) {
+        return { code: 0, message: '删除成功' }
+      }
+      return {}
+    }else{
+      return {code: 400, message: '未找到文件'}
+    }
+
+  }
+  async remove1(id: number) {  //直接删除数据库的图片数据
     let result = await this.prisma.materialLibrary.delete({
       where: {
         id
@@ -167,7 +200,7 @@ export class MateriallibraryService {
 
       let data: any = loadMenuTypeStr(result.data);
       console.log(data)
-     let regData =  this.regDetailMsg(data);
+      let regData = this.regDetailMsg(data);
       // data = JSON.parse(data);
 
       if (regData.code == '0') {
@@ -275,7 +308,7 @@ export class MateriallibraryService {
     const cebInvtListsString = match[1];
     const cebInvtLists = JSON.parse(`[${cebInvtListsString}]`);
     // console.log(cebInvtLists, '}}}', codeValue, appStatusText)
-    return { code: codeValue, result: { cebInvtHead: { buyerName, consigneeAddress, logisticsNo, buyerIdNumber, buyerTelephone, appStatusText,invtNo }, cebInvtLists } };
+    return { code: codeValue, result: { cebInvtHead: { buyerName, consigneeAddress, logisticsNo, buyerIdNumber, buyerTelephone, appStatusText, invtNo }, cebInvtLists } };
   }
   regMsg(str) {   //正则处理列表返回数据，隔离异常字符
     // 提取 code 的值
