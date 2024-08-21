@@ -113,3 +113,15 @@ model PackageTable{
  shopToken String @db.VarChar(1000) @default("")
  @@index([id])
 }
+
+model ProjectModel{
+  id Int    @id @default(autoincrement())
+  @@index([id])
+  projectName String
+  label String?
+  richText String
+  projectImg String
+  imgList String?
+  startTime  String?
+  endTime    String?
+}

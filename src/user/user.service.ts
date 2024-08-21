@@ -109,4 +109,12 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async getProject(req){
+    let result = await this.prisma.projectModel.findMany({ where:{}})
+    if(result){
+      return {code:0,list:result}
+    }
+    return {code:0,list:[]}
+  }
 }

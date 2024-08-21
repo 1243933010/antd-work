@@ -96,4 +96,11 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/project')
+  getProject(@Request() req) {
+    return this.userService.getProject(req);
+  }
+
 }
