@@ -1,27 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,Query ,Request,UseInterceptors,UploadedFile} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  Request,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { WorkService } from './work.service';
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
-import {CreateInvitationPipe} from '../modules/auth/pipe/pipe.pipe'
+import { CreateInvitationPipe } from '../modules/auth/pipe/pipe.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import {FileInterceptor} from '@nestjs/platform-express'
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller({
-  path:'/api',
+  path: '/api',
 })
-
 export class WorkController {
   constructor(private readonly workService: WorkService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/work')
-   create(@Body(CreateInvitationPipe) createWorkDto: CreateWorkDto,@Request() req) {
-    return this.workService.create(createWorkDto,req.user);
+  create(
+    @Body(CreateInvitationPipe) createWorkDto: CreateWorkDto,
+    @Request() req,
+  ) {
+    return this.workService.create(createWorkDto, req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/work')
-  getWork(@Query() query: object,@Request() req) {
-    return this.workService.getWork(query,req.user);
+  getWork(@Query() query: object, @Request() req) {
+    return this.workService.getWork(query, req.user);
   }
 
   @Get('/work/tag')
@@ -31,13 +46,17 @@ export class WorkController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/work/:id')
-  findOne(@Param('id') id: string,@Request() req) {
-    return this.workService.findOne(+id,req.user);
+  findOne(@Param('id') id: string, @Request() req) {
+    return this.workService.findOne(+id, req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch('/work/:id')
-  update(@Param('id') id: string, @Body(CreateInvitationPipe) updateWorkDto: UpdateWorkDto,@Request() req) {
+  update(
+    @Param('id') id: string,
+    @Body(CreateInvitationPipe) updateWorkDto: UpdateWorkDto,
+    @Request() req,
+  ) {
     return this.workService.update(+id, updateWorkDto);
   }
 
@@ -47,7 +66,6 @@ export class WorkController {
     return this.workService.remove(+id);
   }
 
-  
   // @Post('/uploadFile')
   // @UseInterceptors(FileInterceptor('file'))
   // uploadFile( @UploadedFile() file) {

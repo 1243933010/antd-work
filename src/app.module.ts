@@ -9,21 +9,28 @@ import { EchartModule } from './echart/echart.module';
 import { MateriallibraryModule } from './materiallibrary/materiallibrary.module';
 import { CommonModuleModule } from './modules/common-module/common-module.module';
 
-import { ConfigModule,ConfigService } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-let envFilePath = ['.env'];
-if(process.env.NODE_ENV=='dev'){
-  envFilePath.push('.env.dev')
-}else{
-  envFilePath.push('.env.pro')
+const envFilePath = ['.env'];
+if (process.env.NODE_ENV == 'dev') {
+  envFilePath.push('.env.dev');
+} else {
+  envFilePath.push('.env.pro');
 }
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath
+      envFilePath,
     }),
-    UserModule,PrismaInitModule,AuthModule, WorkModule, EchartModule, MateriallibraryModule,CommonModuleModule],
+    UserModule,
+    PrismaInitModule,
+    AuthModule,
+    WorkModule,
+    EchartModule,
+    MateriallibraryModule,
+    CommonModuleModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
