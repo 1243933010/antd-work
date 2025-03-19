@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards,Request,Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { EchartService } from './echart.service';
 import { CreateEchartDto } from './dto/create-echart.dto';
 import { UpdateEchartDto } from './dto/update-echart.dto';
 import { AuthGuard } from '@nestjs/passport';
-import {CreateInvitationPipe} from '../modules/auth/pipe/pipe.pipe'
+import { CreateInvitationPipe } from '../modules/auth/pipe/pipe.pipe';
 
 @Controller('api/echart')
 export class EchartController {
@@ -11,14 +22,17 @@ export class EchartController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body(CreateInvitationPipe) createEchartDto: CreateEchartDto,@Request() req) {
-    return this.echartService.create(createEchartDto,req.user);
+  create(
+    @Body(CreateInvitationPipe) createEchartDto: CreateEchartDto,
+    @Request() req,
+  ) {
+    return this.echartService.create(createEchartDto, req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-   findAll(@Query() query,@Request() req) {
-    return this.echartService.findAll(query,req);
+  findAll(@Query() query, @Request() req) {
+    return this.echartService.findAll(query, req);
   }
 
   @Get(':id')
@@ -28,7 +42,10 @@ export class EchartController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body(CreateInvitationPipe) updateEchartDto: UpdateEchartDto) {
+  update(
+    @Param('id') id: string,
+    @Body(CreateInvitationPipe) updateEchartDto: UpdateEchartDto,
+  ) {
     return this.echartService.update(+id, updateEchartDto);
   }
 

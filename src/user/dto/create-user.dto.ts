@@ -1,14 +1,11 @@
 export class CreateUserDto {
-    id?:string
-    
-    access:string
+  id?: string;
 
-    avatar?:string
+  access: string;
 
-    name:string
+  avatar?: string;
 
-    email?:string
+  name: string;
 
-    
-
+  email?: string;
 }

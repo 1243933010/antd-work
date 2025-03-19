@@ -1,27 +1,33 @@
-import {Injectable,NestInterceptor,CallHandler, Inject} from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  CallHandler,
+  Inject,
+} from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 // import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston/dist/winston.constants';
 import { Logger } from 'winston';
 
-interface Data<T>{
-    data:T
+interface Data<T> {
+  data: T;
 }
 @Injectable()
-export class Respon<T> implements NestInterceptor{
-    
-    constructor(@Inject('winston') private readonly logger:Logger){}
-        intercept(context, next: CallHandler):Observable<Data<T>>{
-            return next.handle().pipe(map(data=>{
-                // console.log(data,'-----')
-                let result = JSON.parse(JSON.stringify(data));
-                Reflect.deleteProperty(result,'message')
-                Reflect.deleteProperty(result,'code')
-                this.logger.info('response',result)
-                return {
-                    data:result.length?result:result,
-                    code:data?.code?data.code:0,
-                    message:data?.message?data.message:'success'
-                }
-            }))
-    }
+export class Respon<T> implements NestInterceptor {
+  constructor(@Inject('winston') private readonly logger: Logger) {}
+  intercept(context, next: CallHandler): Observable<Data<T>> {
+    return next.handle().pipe(
+      map((data) => {
+        // console.log(data,'-----')
+        const result = JSON.parse(JSON.stringify(data));
+        Reflect.deleteProperty(result, 'message');
+        Reflect.deleteProperty(result, 'code');
+        this.logger.info('response', result);
+        return {
+          data: result.length ? result : result,
+          code: data?.code ? data.code : 0,
+          message: data?.message ? data.message : 'success',
+        };
+      }),
+    );
+  }
 }
