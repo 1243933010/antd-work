@@ -10,18 +10,18 @@ import { UserService } from 'src/user/user.service';
 
 import { LocalStrategy } from './local.strategy';
 @Module({
-  imports:[
+  imports: [
     UserModule,
-    PassportModule.register({defaultStrategy:jwtKey.secret,}),
+    PassportModule.register({ defaultStrategy: jwtKey.secret }),
     JwtModule.register({
-      secret:jwtKey.secret,
-      signOptions:{
-        expiresIn:'12h'
-      }
-    })
+      secret: jwtKey.secret,
+      signOptions: {
+        expiresIn: '12h',
+      },
+    }),
   ],
-  providers: [AuthService,LocalStrategy,JwtStrategy,UserService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, UserService],
   controllers: [AuthController],
-  exports:[AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

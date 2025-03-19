@@ -4,7 +4,7 @@ import { UpdateCommonModuleDto } from './dto/update-common-module.dto';
 import { PrismaService } from '../../prismaInt/prismaInt.service';
 @Injectable()
 export class CommonModuleService {
-  constructor(private prisma:PrismaService){}
+  constructor(private prisma: PrismaService) {}
   create(createCommonModuleDto: CreateCommonModuleDto) {
     return 'This action adds a new commonModule';
   }
@@ -25,26 +25,25 @@ export class CommonModuleService {
     return `This action removes a #${id} commonModule`;
   }
 
-  async package(body){
-    console.log(body,'---')
+  async package(body) {
+    console.log(body, '---');
     try {
-      let data = await this.prisma.packageTable.update({
-        where:{id:1},
-        data:{
-          shopToken:body.token
-        }
-      })
-      if(data){
-        return {code:0,message:'更新成功'}
+      const data = await this.prisma.packageTable.update({
+        where: { id: 1 },
+        data: {
+          shopToken: body.token,
+        },
+      });
+      if (data) {
+        return { code: 0, message: '更新成功' };
       }
-      
     } catch (error) {
-      return {code:400,message:error.name}
+      return { code: 400, message: error.name };
     }
   }
 
-  async getPackage(){
-    return {code:0,message:'success',data:{}}
+  async getPackage() {
+    return { code: 0, message: 'success', data: {} };
     // console.log('11111111')
     // let data = await this.prisma.packageTable.findFirst();
     // console.log(data,'===')
@@ -54,7 +53,7 @@ export class CommonModuleService {
     // return {code:400}
   }
 
-  async getNotice(req){
-    return {code:0,data:[]}
+  async getNotice(req) {
+    return { code: 0, data: [] };
   }
 }

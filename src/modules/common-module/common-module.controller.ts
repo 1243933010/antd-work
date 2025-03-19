@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Request, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Request,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CommonModuleService } from './common-module.service';
 import { CreateCommonModuleDto } from './dto/create-common-module.dto';
 import { UpdateCommonModuleDto } from './dto/update-common-module.dto';
@@ -7,9 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
   path: '/api/common',
 })
 export class CommonModuleController {
-  constructor(private readonly commonModuleService: CommonModuleService) { }
-
-
+  constructor(private readonly commonModuleService: CommonModuleService) {}
 
   // @Post()
   // create(@Body() createCommonModuleDto: CreateCommonModuleDto) {
@@ -52,5 +61,4 @@ export class CommonModuleController {
   getNotice(@Request() req) {
     return this.commonModuleService.getNotice(req);
   }
-  
 }
